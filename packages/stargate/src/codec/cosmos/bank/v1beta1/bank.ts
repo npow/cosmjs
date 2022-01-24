@@ -35,6 +35,9 @@ export interface Output {
 /**
  * Supply represents a struct that passively keeps track of the total supply
  * amounts in the network.
+ * This message is deprecated now that supply is indexed by denom.
+ *
+ * @deprecated
  */
 export interface Supply {
   total: Coin[];
@@ -50,7 +53,7 @@ export interface DenomUnit {
   /**
    * exponent represents power of 10 exponent that one must
    * raise the base_denom to in order to equal the given DenomUnit's denom
-   * 1 denom = 1^exponent base_denom
+   * 1 denom = 10^exponent base_denom
    * (e.g. with a base_denom of uatom, one can create a DenomUnit of 'atom' with
    * exponent = 6, thus: 1 atom = 10^6 uatom).
    */
@@ -74,6 +77,32 @@ export interface Metadata {
    * displayed in clients.
    */
   display: string;
+  /**
+   * name defines the name of the token (eg: Cosmos Atom)
+   *
+   * Since: cosmos-sdk 0.43
+   */
+  name: string;
+  /**
+   * symbol is the token symbol usually shown on exchanges (eg: ATOM). This can
+   * be the same as the display.
+   *
+   * Since: cosmos-sdk 0.43
+   */
+  symbol: string;
+  /**
+   * URI to a document (on or off-chain) that contains additional information. Optional.
+   *
+   * Since: cosmos-sdk 0.45
+   */
+  uri: string;
+  /**
+   * URIHash is a sha256 hash of a document pointed by URI. It's used to verify that
+   * the document didn't change. Optional.
+   *
+   * Since: cosmos-sdk 0.45
+   */
+  uriHash: string;
 }
 
 const baseParams: object = { defaultSendEnabled: false };
@@ -543,7 +572,15 @@ export const DenomUnit = {
   },
 };
 
-const baseMetadata: object = { description: "", base: "", display: "" };
+const baseMetadata: object = {
+  description: "",
+  base: "",
+  display: "",
+  name: "",
+  symbol: "",
+  uri: "",
+  uriHash: "",
+};
 
 export const Metadata = {
   encode(message: Metadata, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
@@ -558,6 +595,18 @@ export const Metadata = {
     }
     if (message.display !== "") {
       writer.uint32(34).string(message.display);
+    }
+    if (message.name !== "") {
+      writer.uint32(42).string(message.name);
+    }
+    if (message.symbol !== "") {
+      writer.uint32(50).string(message.symbol);
+    }
+    if (message.uri !== "") {
+      writer.uint32(58).string(message.uri);
+    }
+    if (message.uriHash !== "") {
+      writer.uint32(66).string(message.uriHash);
     }
     return writer;
   },
@@ -581,6 +630,18 @@ export const Metadata = {
           break;
         case 4:
           message.display = reader.string();
+          break;
+        case 5:
+          message.name = reader.string();
+          break;
+        case 6:
+          message.symbol = reader.string();
+          break;
+        case 7:
+          message.uri = reader.string();
+          break;
+        case 8:
+          message.uriHash = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -613,6 +674,26 @@ export const Metadata = {
     } else {
       message.display = "";
     }
+    if (object.name !== undefined && object.name !== null) {
+      message.name = String(object.name);
+    } else {
+      message.name = "";
+    }
+    if (object.symbol !== undefined && object.symbol !== null) {
+      message.symbol = String(object.symbol);
+    } else {
+      message.symbol = "";
+    }
+    if (object.uri !== undefined && object.uri !== null) {
+      message.uri = String(object.uri);
+    } else {
+      message.uri = "";
+    }
+    if (object.uriHash !== undefined && object.uriHash !== null) {
+      message.uriHash = String(object.uriHash);
+    } else {
+      message.uriHash = "";
+    }
     return message;
   },
 
@@ -626,6 +707,10 @@ export const Metadata = {
     }
     message.base !== undefined && (obj.base = message.base);
     message.display !== undefined && (obj.display = message.display);
+    message.name !== undefined && (obj.name = message.name);
+    message.symbol !== undefined && (obj.symbol = message.symbol);
+    message.uri !== undefined && (obj.uri = message.uri);
+    message.uriHash !== undefined && (obj.uriHash = message.uriHash);
     return obj;
   },
 
@@ -651,6 +736,26 @@ export const Metadata = {
       message.display = object.display;
     } else {
       message.display = "";
+    }
+    if (object.name !== undefined && object.name !== null) {
+      message.name = object.name;
+    } else {
+      message.name = "";
+    }
+    if (object.symbol !== undefined && object.symbol !== null) {
+      message.symbol = object.symbol;
+    } else {
+      message.symbol = "";
+    }
+    if (object.uri !== undefined && object.uri !== null) {
+      message.uri = object.uri;
+    } else {
+      message.uri = "";
+    }
+    if (object.uriHash !== undefined && object.uriHash !== null) {
+      message.uriHash = object.uriHash;
+    } else {
+      message.uriHash = "";
     }
     return message;
   },

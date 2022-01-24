@@ -1,4 +1,4 @@
-console.log("HBYE");
+//@ts-nocheck
 import { encodeSecp256k1Pubkey, makeSignDoc as makeSignDocAmino, StdFee } from "@cosmjs/amino";
 import { fromBase64 } from "@cosmjs/encoding";
 import { Int53 } from "@cosmjs/math";
@@ -20,12 +20,14 @@ import Long from "long";
 import { AminoTypes } from "./aminotypes";
 import { MsgMultiSend } from "./codec/cosmos/bank/v1beta1/tx";
 import { Coin } from "./codec/cosmos/base/v1beta1/coin";
+
 import {
   MsgFundCommunityPool,
   MsgSetWithdrawAddress,
   MsgWithdrawDelegatorReward,
   MsgWithdrawValidatorCommission,
 } from "./codec/cosmos/distribution/v1beta1/tx";
+
 import {
   MsgBeginRedelegate,
   MsgCreateValidator,
@@ -33,9 +35,53 @@ import {
   MsgEditValidator,
   MsgUndelegate,
 } from "./codec/cosmos/staking/v1beta1/tx";
+
+import {
+  MsgDeposit,
+  MsgSubmitProposal,
+  MsgVote,
+  MsgVoteWeighted,
+} from "./codec/cosmos/gov/v1beta1/tx";
+
+import {
+  MsgSubmitEvidence,
+} from "./codec/cosmos/evidence/v1beta1/tx";
+
+import {
+  MsgCreateVestingAccount,
+  MsgCreatePeriodicVestingAccount,
+} from "./codec/cosmos/vesting/v1beta1/tx";
+
+import {
+  MsgFundCommunityPool,
+  MsgSetWithdrawAddress,
+  MsgWithdrawDelegatorReward,
+  MsgWithdrawValidatorCommission,
+} from "./codec/cosmos/distribution/v1beta1/tx";
+
+import {
+  MsgGrantAllowance,
+  MsgRevokeAllowance,
+} from "./codec/cosmos/feegrant/v1beta1/tx";
+
+import {
+  MsgSend,
+} from "./codec/cosmos/nft/v1beta1/tx";
+
+import {
+  MsgVerifyInvariant,
+} from "./codec/cosmos/crisis/v1beta1/tx";
+
+import {
+  MsgUnjail,
+} from "./codec/cosmos/slashing/v1beta1/tx";
+
 import { SignMode } from "./codec/cosmos/tx/signing/v1beta1/signing";
+
 import { TxRaw } from "./codec/cosmos/tx/v1beta1/tx";
+
 import { MsgTransfer } from "./codec/ibc/applications/transfer/v1/tx";
+
 import {
   MsgAcknowledgement,
   MsgChannelCloseConfirm,
@@ -48,19 +94,23 @@ import {
   MsgTimeout,
   MsgTimeoutOnClose,
 } from "./codec/ibc/core/channel/v1/tx";
+
 import { Height } from "./codec/ibc/core/client/v1/client";
+
 import {
   MsgCreateClient,
   MsgSubmitMisbehaviour,
   MsgUpdateClient,
   MsgUpgradeClient,
 } from "./codec/ibc/core/client/v1/tx";
+
 import {
   MsgConnectionOpenAck,
   MsgConnectionOpenConfirm,
   MsgConnectionOpenInit,
   MsgConnectionOpenTry,
 } from "./codec/ibc/core/connection/v1/tx";
+
 import {
   MsgDelegateEncodeObject,
   MsgSendEncodeObject,
@@ -68,6 +118,7 @@ import {
   MsgUndelegateEncodeObject,
   MsgWithdrawDelegatorRewardEncodeObject,
 } from "./encodeobjects";
+
 import { buildFeeTable, FeeTable, GasLimits, GasPrice } from "./fee";
 import { BroadcastTxResponse, StargateClient } from "./stargateclient";
 
@@ -139,15 +190,35 @@ export const defaultRegistryTypes: ReadonlyArray<[string, any]> = [
   ["/osmosis.incentives.MsgAddToGauge", MsgAddToGauge],
 
   ["/cosmos.bank.v1beta1.MsgMultiSend", MsgMultiSend],
+
   ["/cosmos.distribution.v1beta1.MsgFundCommunityPool", MsgFundCommunityPool],
   ["/cosmos.distribution.v1beta1.MsgSetWithdrawAddress", MsgSetWithdrawAddress],
   ["/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward", MsgWithdrawDelegatorReward],
   ["/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission", MsgWithdrawValidatorCommission],
+
+  ["/cosmos.gov.v1beta1.MsgDeposit", MsgDeposit],
+  ["/cosmos.gov.v1beta1.MsgSubmitProposal", MsgSubmitProposal],
+  ["/cosmos.gov.v1beta1.MsgVote", MsgVote],
+  ["/cosmos.gov.v1beta1.MsgVoteWeighted", MsgVoteWeighted],
+
   ["/cosmos.staking.v1beta1.MsgBeginRedelegate", MsgBeginRedelegate],
   ["/cosmos.staking.v1beta1.MsgCreateValidator", MsgCreateValidator],
   ["/cosmos.staking.v1beta1.MsgDelegate", MsgDelegate],
   ["/cosmos.staking.v1beta1.MsgEditValidator", MsgEditValidator],
   ["/cosmos.staking.v1beta1.MsgUndelegate", MsgUndelegate],
+
+  ["/cosmos.vesting.v1beta1.MsgCreateVestingAccount", MsgCreateVestingAccount],
+  ["/cosmos.vesting.v1beta1.MsgCreatePeriodicVestingAccount", MsgCreatePeriodicVestingAccount],
+
+  ["/cosmos.feegrant.v1beta1.MsgGrantAllowance", MsgGrantAllowance],
+  ["/cosmos.feegrant.v1beta1.MsgRevokeAllowance", MsgRevokeAllowance],
+
+  ["/cosmos.crisis.v1beta1.MsgVerifyInvariant", MsgVerifyInvariant],
+
+  ["/cosmos.evidence.v1beta1.MsgSubmitEvidence", MsgSubmitEvidence],
+
+  ["/cosmos.nft.v1beta1.MsgSend", MsgSend],
+
   ["/ibc.core.channel.v1.MsgChannelOpenInit", MsgChannelOpenInit],
   ["/ibc.core.channel.v1.MsgChannelOpenTry", MsgChannelOpenTry],
   ["/ibc.core.channel.v1.MsgChannelOpenAck", MsgChannelOpenAck],

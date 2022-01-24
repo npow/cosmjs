@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Bech32 } from "@cosmjs/encoding";
 import Long from "long";
 
