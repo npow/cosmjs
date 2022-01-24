@@ -1,3 +1,4 @@
+console.log("HBYE");
 import { encodeSecp256k1Pubkey, makeSignDoc as makeSignDocAmino, StdFee } from "@cosmjs/amino";
 import { fromBase64 } from "@cosmjs/encoding";
 import { Int53 } from "@cosmjs/math";
@@ -70,6 +71,32 @@ import {
 import { buildFeeTable, FeeTable, GasLimits, GasPrice } from "./fee";
 import { BroadcastTxResponse, StargateClient } from "./stargateclient";
 
+import {
+  MsgExitPool,
+  MsgExitSwapExternAmountOut,
+  MsgExitSwapShareAmountIn,
+  MsgJoinPool,
+  MsgJoinSwapExternAmountIn,
+  MsgJoinSwapShareAmountOut,
+  MsgSwapExactAmountIn,
+  MsgSwapExactAmountOut,
+} from "./codec/osmosis/gamm/v1beta1/tx";
+
+import {
+  MsgCreateGauge,
+  MsgAddToGauge,
+} from "./codec/osmosis/incentives/tx";
+
+import {
+  MsgCreateBalancerPool,
+} from "./codec/osmosis/gamm/pool-models/balancer/tx";
+
+import {
+  MsgLockTokens,
+  MsgBeginUnlocking,
+  MsgBeginUnlockingAll,
+} from "./codec/osmosis/lockup/tx";
+
 /**
  * These fees are used by the higher level methods of SigningCosmosClient
  *
@@ -92,7 +119,25 @@ export const defaultGasLimits: GasLimits<CosmosFeeTable> = {
   withdraw: 160_000,
 };
 
-export const defaultRegistryTypes: ReadonlyArray<[string, GeneratedType]> = [
+export const defaultRegistryTypes: ReadonlyArray<[string, any]> = [
+  ["/osmosis.lockup.MsgBeginUnlocking", MsgBeginUnlocking],
+  ["/osmosis.lockup.MsgBeginUnlockingAll", MsgBeginUnlockingAll],
+  ["/osmosis.lockup.MsgLockTokens", MsgLockTokens],
+
+  ["/osmosis.gamm.v1beta1.MsgExitPool", MsgExitPool],
+  ["/osmosis.gamm.v1beta1.MsgExitSwapExternAmountOut", MsgExitSwapExternAmountOut],
+  ["/osmosis.gamm.v1beta1.MsgExitSwapShareAmountIn", MsgExitSwapShareAmountIn],
+  ["/osmosis.gamm.v1beta1.MsgJoinPool", MsgJoinPool],
+  ["/osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn", MsgJoinSwapExternAmountIn],
+  ["/osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOut", MsgJoinSwapShareAmountOut],
+  ["/osmosis.gamm.v1beta1.MsgSwapExactAmountIn", MsgSwapExactAmountIn],
+  ["/osmosis.gamm.v1beta1.MsgSwapExactAmountOut", MsgSwapExactAmountOut],
+
+  ["/osmosis.gamm.pool-models.balancer.MsgCreateBalancerPool", MsgCreateBalancerPool],
+
+  ["/osmosis.incentives.MsgCreateGauge", MsgCreateGauge],
+  ["/osmosis.incentives.MsgAddToGauge", MsgAddToGauge],
+
   ["/cosmos.bank.v1beta1.MsgMultiSend", MsgMultiSend],
   ["/cosmos.distribution.v1beta1.MsgFundCommunityPool", MsgFundCommunityPool],
   ["/cosmos.distribution.v1beta1.MsgSetWithdrawAddress", MsgSetWithdrawAddress],
